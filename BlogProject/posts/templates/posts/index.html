@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="nav-left" style="margin-left:70%;">
+    <form action="{% url 'posts:posts_list_view' %}" method="GET">
+        <input class="form-input" type="text" name="query" placeholder="Article Search" value="{{ request.GET.query }}">
+        <button class="btn" type="submit">Search</button>
+    </form>
+</div>
+<div class="m-auto content max-width-1 my-2">
+
+    <div class="content-left">
+        <h1>The heaven for bloggers</h1>
+        <p>iBlog is a website which lets you submit an article which upon approval will be up on our website and you
+            can get a good amount of reach from here!</p>
+        <p>My Halloween decorations are staying in the box this year. To be honest, they didn’t make it out of the
+            box last year either. My Halloween spirit has officially been bludgeoned to death by teenagers who no
+            longer care and a persistent October fear of the Northern California wildfires. And speaking of fear,
+            isn’t there more than enough of that going around? Maybe all of us can pretend that Halloween isn’t even
+            happening this year?</p>
+    </div>
+    <div class="content-right">
+        <img src="{% static 'img/home.svg' %}" alt="iBlog">
+    </div>
+</div>
+
+<div class="max-width-1 m-auto">
+    <hr>
+</div>
+
+
+<div class="home-articles max-width-1 m-auto font2">
+    {% if object_list %}
+    <h2>Featured Articles</h2>
+    {% endif %}
+    <!--        <div class="year-box adjust-year">-->
+    <!--            <div>-->
+    <!--                <h3>Year </h3>-->
+    <!--            </div>-->
+    <!--            <div>-->
+    <!--                <input type="radio" name="year" id=""> 2020-->
+    <!--            </div>-->
+    <!--            <div>-->
+    <!--                <input type="radio" name="year" id=""> 2021-->
+    <!--            </div>-->
+    <!--        </div>-->
+
+
+    {% for obj in object_list %}
+    <div class="home-article">
+        {% if obj.image %}
+        <div class="home-article-img">
+            <img src="{{ obj.image.url}}" alt="article">
+        </div>
+        {% else %}
+        <div class="home-article-img">
+            <img src="{% static 'img/3.png' %}" alt="article">
+        </div>
+        {% endif %}
+        <div class="home-article-content font1">
+            {% if obj.draft %} <h3>Staff only: Draft </h3>{% endif %}{% if obj.publish > today %} <h3>Staff only: Future
+            Post</h3>{% endif %}
+            <a href="/blogpost.html">
+
+                <h3><a href='{{ obj.get_absolute_url }}'>{{obj.title}}</a></h3>
+            </a>
+            <span class="post-detail-item">{{obj.get_markdown|truncatechars_html:50}}</span>
+
+
+            <div>{% if obj.user.get_full_name %} Author Name - {{ obj.user.get_full_name}} {% endif %}</div>
+            <span>{{obj.publish}}  | {% if obj.read_time <= 1 %} < 1 Minute {% else %} {{ obj.read_time }} minutes
+                    {% endif %} read</span>
+        </div>
+    </div>
+
+
+    {% empty %}
+     <center> <h2>No Post Available</h2></center>
+    <br/>
+
+    {% endfor %}
+<div class="pagination">
+    <span class="step-links">
+        {% if object_list.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ object_list.previous_page_number }}{% if request.GET.query %}&q={{ request.GET.query}}{% endif %}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+        </span>
+
+        {% if object_list.has_next %}
+            <a href="?page={{ object_list.next_page_number }}{% if request.GET.query %}&q={{ request.GET.query}}{% endif %}">next</a>
+            <a href="?page={{ object_list.paginator.num_pages }}{% if request.GET.query %}&q={{ request.GET.query}}{% endif %}">last &raquo;</a>
+        {% endif %}
+    </span>
+    </div>
+
+
+</div>
+
+
+{% endblock content %}

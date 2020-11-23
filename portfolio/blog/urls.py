@@ -1,0 +1,1 @@
+# from django.urls import path# from . import views## urlpatterns=[#     path('',views.allblogs,name='allblogs'),#     path('<int:pk>/',views.detail,name='detail'),# ]from django.urls import pathfrom . import viewsurlpatterns = [    path('',views.allblogs,name='allblogs'),    path('<int:pk>/',views.detail,name='detail'),]

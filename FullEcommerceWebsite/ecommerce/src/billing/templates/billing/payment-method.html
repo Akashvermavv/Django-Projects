@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<!-- stripe form --><h1>Add Payment Method</h1><div class="stripe-payment-form"     data-token="{{publish_key}}" data-next-url="{% if next_url %}{{ next_url }}{% endif %}"       data-btn-title="Add New Card"></div>{% endblock content %}
